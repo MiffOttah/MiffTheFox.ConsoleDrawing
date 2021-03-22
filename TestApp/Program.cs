@@ -8,9 +8,9 @@ namespace TestApp
     {
         static void Main()
         {
-            Console.OutputEncoding = System.Text.Encoding.GetEncoding(437);
-            
-            using var output = Win32ConsoleOutput.Create();
+            //Console.OutputEncoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding(437);
+
+            using var output = Win32ConsoleOutput.Create(codepage: 437);
             var page = output.CreatePageFromBuffer();
             page.Clear();
 
@@ -18,8 +18,8 @@ namespace TestApp
 
             page.DrawHLine(32, 4, 10, BorderThickness.Double);
             
-            //page.DrawBox(20, 5, 10, 3);
-            //page.DrawText(21, 6, "This is a box!");
+            page.DrawBox(20, 5, 22, 3);
+            page.DrawText(21, 6, "This is a box!");
 
             page.Write();
 
@@ -53,6 +53,18 @@ namespace TestApp
 
                     case ConsoleKey.Enter:
                         page.DrawText(cX, cY, "Text!");
+                        break;
+
+                    case ConsoleKey.B:
+                        page.DrawBox(cX, cY, 6, 2, BorderThickness.Double);
+                        break;
+
+                    case ConsoleKey.H:
+                        page.DrawHLine(cX, cY, 10, BorderThickness.Single);
+                        break;
+
+                    case ConsoleKey.V:
+                        page.DrawVLine(cX, cY, 5, BorderThickness.Single);
                         break;
 
                     case ConsoleKey.Home:

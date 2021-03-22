@@ -27,6 +27,9 @@ namespace MiffTheFox.ConsoleDrawing
         public void SetCell(int x, int y, char ch, ConsoleColor background, ConsoleColor foreground)
             => _Cells[x, y] = CellEncoding.Encode(ch, background, foreground);
 
+        public void SetCell(int x, int y, char ch)
+            => SetCell(x, y, ch, DrawBackground, DrawForeground);
+
         public void SetColor(int x, int y, ConsoleColor background, ConsoleColor foregound)
         {
             SetCell(x, y, (char)(_Cells[x, y] & 0xFFFF), background, foregound);

@@ -19,8 +19,9 @@ namespace MiffTheFox.ConsoleDrawing.Win32
 
         private readonly Native.Coord _BufferSize;
         private readonly Native.Coord _ZeroCoord = new Native.Coord { X = 0, Y = 0 };
+        private readonly Encoding _CodePage;
 
-        private Win32ConsoleOutput(ConsoleColor backgroundColor, ConsoleColor foregroundColor, int width, int height)
+        private Win32ConsoleOutput(ConsoleColor backgroundColor, ConsoleColor foregroundColor, int width, int height, Encoding codepage)
         {
             _Handle = Native.CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
@@ -34,16 +35,25 @@ namespace MiffTheFox.ConsoleDrawing.Win32
             _BufferSize = new Native.Coord { X = (short)width, Y = (short)height };
             _BackgroundColor = backgroundColor;
             _ForegroundColor = foregroundColor;
+            _CodePage = codepage;
         }
 
-        public static Win32ConsoleOutput Create()
+        public static Win32ConsoleOutput Create(int? codepage = null)
         {
             // set up system.console before opening handle
             Console.BufferWidth = Console.WindowWidth;
             Console.BufferHeight = Console.WindowHeight;
-            Console.CursorVisible = false;
 
-            return new Win32ConsoleOutput(Console.BackgroundColor, Console.ForegroundColor, Console.WindowWidth, Console.WindowHeight);
+            Encoding codepageEncoding = null;
+            if (codepage.HasValue)
+            {
+                codepageEncoding = CodePagesEncodingProvider.Instance.GetEncoding(codepage.Value);
+                Console.OutputEncoding = codepageEncoding;
+            }
+
+            Console.CursorVisible = false; // for some reason this has to be set after changing the encoding
+
+            return new Win32ConsoleOutput(Console.BackgroundColor, Console.ForegroundColor, Console.WindowWidth, Console.WindowHeight, codepageEncoding);
         }
 
         public OutputBoundPage CreatePageFromBuffer()
@@ -64,7 +74,27 @@ namespace MiffTheFox.ConsoleDrawing.Win32
             {
                 for (int x = 0; x < page.Width; x++)
                 {
-                    _CharInfo[i].Char.UnicodeChar = page.GetCell(x, y, out var background, out var foreground);
+                    ConsoleColor background, foreground;
+
+                    if (_CodePage == null)
+                    {
+                        _CharInfo[i].Char.UnicodeChar = page.GetCell(x, y, out background, out foreground);
+                    }
+                    else
+                    {
+                        Span<byte> b = stackalloc byte[1];
+                        Span<char> c = stackalloc char[1];
+                        c[0] = page.GetCell(x, y, out background, out foreground);
+                        if (_CodePage.GetBytes(c, b) == 1)
+                        {
+                            _CharInfo[i].Char.AsciiChar = b[0];
+                        }
+                        else
+                        {
+                            _CharInfo[i].Char.AsciiChar = 0x20; // default to space
+                        }
+                    }
+
                     _CharInfo[i].Attributes = (short)(((int)background << 4) | (int)foreground);
                     i++;
                 }

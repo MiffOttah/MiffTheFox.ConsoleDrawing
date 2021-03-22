@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MiffTheFox.ConsoleDrawing.Win32\MiffTheFox.ConsoleDrawing.Win32.csproj" />
     <ProjectReference Include="..\MiffTheFox.ConsoleDrawing\MiffTheFox.ConsoleDrawing.csproj" />
   </ItemGroup>
