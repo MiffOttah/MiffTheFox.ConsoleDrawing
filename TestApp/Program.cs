@@ -1,6 +1,7 @@
 ﻿using System;
 using MiffTheFox.ConsoleDrawing.Win32;
 using MiffTheFox.ConsoleDrawing.BoxDrawing;
+using MiffTheFox.ConsoleDrawing;
 
 namespace TestApp
 {
@@ -20,6 +21,10 @@ namespace TestApp
             
             page.DrawBox(20, 5, 22, 3);
             page.DrawText(21, 6, "This is a box!");
+
+            var subpage = new Page(25, 8);
+            subpage.DrawForeground = ConsoleColor.Cyan;
+            subpage.DrawBox(0, 0, 25, 8);
 
             page.Write();
 
@@ -53,6 +58,10 @@ namespace TestApp
 
                     case ConsoleKey.Enter:
                         page.DrawText(cX, cY, "Text!");
+                        break;
+
+                    case ConsoleKey.S:
+                        page.BlitFrom(subpage, cX, cY);
                         break;
 
                     case ConsoleKey.B:

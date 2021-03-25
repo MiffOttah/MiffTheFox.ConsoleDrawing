@@ -56,5 +56,27 @@ namespace MiffTheFox.ConsoleDrawing
                 SetCell(x + i, y, text[i], DrawBackground, DrawForeground);
             }
         }
+
+        public void BlitFrom(Page source, int srcX, int srcY, int destX, int destY, int width, int height)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                int sx = srcX + i;
+                int dx = destX + i;
+                if (sx >= source.Width || dx >= Width) break;
+
+                for (int j = 0; j < height; j++)
+                {
+                    int sy = srcY + j;
+                    int dy = destY + j;
+                    if (sy >= source.Height || dy >= Height) break;
+
+                    _Cells[dx, dy] = source._Cells[sx, sy];
+                }
+            }
+        }
+
+        public void BlitFrom(Page source, int destX, int destY)
+            => BlitFrom(source, 0, 0, destX, destY, source.Width, source.Height);
     }
 }
