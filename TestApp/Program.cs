@@ -31,6 +31,8 @@ namespace TestApp
             int cX = 0;
             int cY = 0;
 
+            string savePath = System.IO.Path.Combine(Environment.CurrentDirectory, "PageSaveLoad.dat");
+
             ConsoleKey ck = ConsoleKey.Spacebar;
             do
             {
@@ -74,6 +76,16 @@ namespace TestApp
 
                     case ConsoleKey.V:
                         page.DrawVLine(cX, cY, 5, BorderThickness.Single);
+                        break;
+
+                    case ConsoleKey.X:
+                        page.Save(savePath);
+                        page.DrawText(0, page.Height - 1, "Save " + savePath);
+                        break;
+
+                    case ConsoleKey.Z:
+                        page.BlitFrom(Page.Load(savePath), 0, 0);
+                        page.DrawText(0, page.Height - 1, "Load " + savePath);
                         break;
 
                     case ConsoleKey.Home:

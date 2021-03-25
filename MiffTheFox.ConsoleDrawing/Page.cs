@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MiffTheFox.ConsoleDrawing
 {
-    public class Page
+    public partial class Page
     {
         private readonly int[,] _Cells;
 
