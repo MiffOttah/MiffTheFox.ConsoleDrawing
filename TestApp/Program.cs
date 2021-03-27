@@ -2,6 +2,7 @@
 using MiffTheFox.ConsoleDrawing.Win32;
 using MiffTheFox.ConsoleDrawing.BoxDrawing;
 using MiffTheFox.ConsoleDrawing;
+using MiffTheFox.ConsoleDrawing.Output;
 
 namespace TestApp
 {
@@ -11,8 +12,12 @@ namespace TestApp
         {
             //Console.OutputEncoding = System.Text.CodePagesEncodingProvider.Instance.GetEncoding(437);
 
-            using var output = Win32ConsoleOutput.Create(codepage: 437);
+            //using var output = Win32ConsoleOutput.Create(codepage: 437);
+            using var output = new AnsiConsoleOutput(Console.OutputEncoding, Console.WindowWidth, Console.WindowHeight);
+
             var page = output.CreatePageFromBuffer();
+            page.DrawBackground = ConsoleColor.Black;
+            page.DrawForeground = ConsoleColor.White;
             page.Clear();
 
             page.DrawText(1, 1, "Text!");
@@ -62,6 +67,10 @@ namespace TestApp
                         page.DrawText(cX, cY, "Text!");
                         break;
 
+                    case ConsoleKey.E:
+                        page.DrawText(0, 0, "Encoding = " + Console.OutputEncoding.EncodingName);
+                        break;
+
                     case ConsoleKey.S:
                         page.BlitFrom(subpage, cX, cY);
                         break;
@@ -86,6 +95,10 @@ namespace TestApp
                     case ConsoleKey.Z:
                         page.BlitFrom(Page.Load(savePath), 0, 0);
                         page.DrawText(0, page.Height - 1, "Load " + savePath);
+                        break;
+
+                    case ConsoleKey.L:
+                        page.DrawText(0, 0, $"{cX},{cY}  ");
                         break;
 
                     case ConsoleKey.Home:
