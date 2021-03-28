@@ -12,6 +12,7 @@ namespace MiffTheFox.ConsoleDrawing.Output
 
         const string CSI = "\x1B[";
         const string VT_CursorOff = CSI + "?25l";
+        const string VT_ResetFormatting = CSI + "0m";
         const string VT_ClearScreen = CSI + "3J";
 
         public int Width { get; }
@@ -36,8 +37,9 @@ namespace MiffTheFox.ConsoleDrawing.Output
 
         public OutputBoundPage CreatePageFromBuffer()
         {
-            // hide cursor
+            // set up terminal for TUI
             Writer.Write(VT_CursorOff);
+            Writer.Write(VT_ResetFormatting);
 
             return new OutputBoundPage(this, Width, Height);
         }
@@ -85,22 +87,22 @@ namespace MiffTheFox.ConsoleDrawing.Output
             // hard-coded escape sequences for best performance
             Writer.Write(color switch
             {
-                ConsoleColor.Red => "1;41m",
-                ConsoleColor.Green => "1;42m",
-                ConsoleColor.Yellow => "1;43m",
-                ConsoleColor.Blue => "1;44m",
-                ConsoleColor.Magenta => "1;45m",
-                ConsoleColor.Cyan => "1;46m",
-                ConsoleColor.Gray => "1;47m",
-                ConsoleColor.DarkGray => "1;100m",
-                ConsoleColor.DarkRed => "1;101m",
-                ConsoleColor.DarkGreen => "1;102m",
-                ConsoleColor.DarkYellow => "1;103m",
-                ConsoleColor.DarkBlue => "1;104m",
-                ConsoleColor.DarkMagenta => "1;105m",
-                ConsoleColor.DarkCyan => "1;106m",
-                ConsoleColor.White => "1;107m",
-                _ => "1;40m" // default to black
+                ConsoleColor.DarkRed => "41m",
+                ConsoleColor.DarkGreen => "42m",
+                ConsoleColor.DarkYellow => "43m",
+                ConsoleColor.DarkBlue => "44m",
+                ConsoleColor.DarkMagenta => "45m",
+                ConsoleColor.DarkCyan => "46m",
+                ConsoleColor.Gray => "47m",
+                ConsoleColor.DarkGray => "100m",
+                ConsoleColor.Red => "101m",
+                ConsoleColor.Green => "102m",
+                ConsoleColor.Yellow => "103m",
+                ConsoleColor.Blue => "104m",
+                ConsoleColor.Magenta => "105m",
+                ConsoleColor.Cyan => "106m",
+                ConsoleColor.White => "107m",
+                _ => "40m" // default to black
             });
         }
 
@@ -110,23 +112,22 @@ namespace MiffTheFox.ConsoleDrawing.Output
             Writer.Write(CSI);
             Writer.Write(color switch
             {
-                ConsoleColor.Black => "1;30m",
-                ConsoleColor.Red => "1;31m",
-                ConsoleColor.Green => "1;32m",
-                ConsoleColor.Yellow => "1;33m",
-                ConsoleColor.Blue => "1;34m",
-                ConsoleColor.Magenta => "1;35m",
-                ConsoleColor.Cyan => "1;36m",
-                ConsoleColor.Gray => "1;37m",
-                ConsoleColor.DarkGray => "1;90m",
-                ConsoleColor.DarkRed => "1;91m",
-                ConsoleColor.DarkGreen => "1;92m",
-                ConsoleColor.DarkYellow => "1;93m",
-                ConsoleColor.DarkBlue => "1;94m",
-                ConsoleColor.DarkMagenta => "1;95m",
-                ConsoleColor.DarkCyan => "1;96m",
-                ConsoleColor.White => "1;97m",
-                _ => "1;97m" // default to white
+                ConsoleColor.Black => "30m",
+                ConsoleColor.DarkRed => "31m",
+                ConsoleColor.DarkGreen => "32m",
+                ConsoleColor.DarkYellow => "33m",
+                ConsoleColor.DarkBlue => "34m",
+                ConsoleColor.DarkMagenta => "35m",
+                ConsoleColor.DarkCyan => "36m",
+                ConsoleColor.Gray => "37m",
+                ConsoleColor.DarkGray => "90m",
+                ConsoleColor.Red => "91m",
+                ConsoleColor.Green => "92m",
+                ConsoleColor.Yellow => "93m",
+                ConsoleColor.Blue => "94m",
+                ConsoleColor.Magenta => "95m",
+                ConsoleColor.Cyan => "96m",
+                _ => "97m" // default to white
             });
         }
 

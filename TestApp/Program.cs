@@ -23,7 +23,7 @@ namespace TestApp
             page.DrawText(1, 1, "Text!");
 
             page.DrawHLine(32, 4, 10, BorderThickness.Double);
-            
+
             page.DrawBox(20, 5, 22, 3);
             page.DrawText(21, 6, "This is a box!");
 
@@ -101,6 +101,10 @@ namespace TestApp
                         page.DrawText(0, 0, $"{cX},{cY}  ");
                         break;
 
+                    case ConsoleKey.C:
+                        DrawColors(page);
+                        break;
+
                     case ConsoleKey.Home:
                         page.DrawBackground = ConsoleColor.Black;
                         break;
@@ -114,6 +118,36 @@ namespace TestApp
                 page.Write();
                 ck = Console.ReadKey(true).Key;
             } while (ck != ConsoleKey.Escape);
+        }
+
+        private static void DrawColors(OutputBoundPage page)
+        {
+            var cc = new ConsoleColor[] {
+                ConsoleColor.Black,
+                ConsoleColor.DarkRed,
+                ConsoleColor.DarkGreen,
+                ConsoleColor.DarkYellow,
+                ConsoleColor.DarkBlue,
+                ConsoleColor.DarkMagenta,
+                ConsoleColor.DarkCyan,
+                ConsoleColor.Gray,
+                ConsoleColor.DarkGray,
+                ConsoleColor.Red,
+                ConsoleColor.Green,
+                ConsoleColor.Yellow,
+                ConsoleColor.Blue,
+                ConsoleColor.Magenta,
+                ConsoleColor.Cyan,
+                ConsoleColor.White
+            };
+
+            for (int i = 0; i < cc.Length; i++)
+            {
+                for (int j = 0; j < cc.Length; j++)
+                {
+                    page.SetCell(i, j, '║', cc[i], cc[j]);
+                }
+            }
         }
     }
 }
