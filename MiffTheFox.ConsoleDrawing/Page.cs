@@ -11,14 +11,15 @@ namespace MiffTheFox.ConsoleDrawing
         public int Width { get; }
         public int Height { get; }
 
-        public ConsoleColor DrawBackground { get; set; }
-        public ConsoleColor DrawForeground { get; set; }
+        public ConsoleColor DrawBackground { get; set; } = ConsoleColor.Black;
+        public ConsoleColor DrawForeground { get; set; } = ConsoleColor.White;
 
         public Page(int width, int height)
         {
             Width = width;
             Height = height;
             _Cells = new int[Width, Height];
+            Clear();
         }
 
         public char GetCell(int x, int y, out ConsoleColor background, out ConsoleColor foregound)
